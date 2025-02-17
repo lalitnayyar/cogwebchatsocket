@@ -1,0 +1,1 @@
+Couldn't find the requested file /dist/socket-client.web.js in @cognigy/socket-client.
