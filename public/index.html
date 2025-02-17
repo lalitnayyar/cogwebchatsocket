@@ -5,20 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cognigy Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="app-container">
-        <div class="chat-container">
+        <!-- Left Sidebar - Chat -->
+        <div class="left-sidebar">
             <div class="chat-header">
                 <div class="header-content">
-                    <i class="fas fa-robot"></i>
+                    <div class="bot-avatar">
+                        <i class="fas fa-robot"></i>
+                        <div class="bot-status"></div>
+                    </div>
                     <h1>AI Assistant</h1>
                 </div>
                 <div class="connection-status">
-                    <span class="status-dot"></span>
-                    <span class="status-text">Connected</span>
+                    <div class="radar-container">
+                        <div class="radar-ring"></div>
+                        <div class="radar-dot"></div>
+                    </div>
+                    <div class="status-info">
+                        <i class="fas fa-signal-stream"></i>
+                        <span class="status-text">Connected</span>
+                    </div>
                 </div>
             </div>
             <div class="chat-messages" id="messages"></div>
@@ -27,16 +37,18 @@
                     <i class="far fa-comment-dots"></i>
                     <input type="text" id="messageInput" placeholder="Type your message...">
                     <button onclick="sendMessage()">
-                        <i class="fas fa-paper-plane"></i>
+                        <i class="fas fa-paper-plane-top"></i>
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- Right Sidebar - Message Flow -->
         <div class="right-sidebar">
             <div class="sidebar-header">
-                <h2><i class="fas fa-exchange-alt"></i> Message Flow</h2>
+                <h2><i class="fas fa-network-wired"></i> Message Flow</h2>
                 <button onclick="clearLogs()" class="clear-logs-btn">
-                    <i class="fas fa-trash"></i> Clear
+                    <i class="fas fa-trash-xmark"></i> Clear
                 </button>
             </div>
             <div class="message-flow" id="messageFlow">

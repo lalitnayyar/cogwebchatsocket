@@ -28,6 +28,21 @@ function updateConnectionStatus(isConnected) {
     }
 }
 
+function updateConnectionStatus(connected) {
+    const header = document.querySelector('.chat-header');
+    const statusText = document.querySelector('.status-text');
+    
+    if (connected) {
+        header.classList.remove('disconnected');
+        statusText.textContent = 'Connected';
+        statusText.style.color = 'var(--cognigy-chat-background)';
+    } else {
+        header.classList.add('disconnected');
+        statusText.textContent = 'Disconnected';
+        statusText.style.color = 'var(--cognigy-chat-background)';
+    }
+}
+
 // Log message flow
 function logMessageFlow(direction, data) {
     const entry = document.createElement('div');
@@ -44,6 +59,16 @@ function logMessageFlow(direction, data) {
         </div>
         <pre>${JSON.stringify(data, null, 2)}</pre>
     `;
+    
+    messageFlow.appendChild(entry);
+    messageFlow.scrollTop = messageFlow.scrollHeight;
+}
+
+function addToMessageFlow(message) {
+    const entry = document.createElement('div');
+    entry.classList.add('flow-entry');
+    
+    entry.textContent = message;
     
     messageFlow.appendChild(entry);
     messageFlow.scrollTop = messageFlow.scrollHeight;
@@ -85,6 +110,18 @@ client.on("error", (error) => {
     console.error("Error:", error.message);
     displayMessage(`<i class="fas fa-exclamation-circle"></i> Error: ${error.message}`, 'bot');
     updateConnectionStatus(false);
+});
+
+client.on("connected", () => {
+    console.log("Connected to Cognigy AI");
+    updateConnectionStatus(true);
+    addToMessageFlow("🟢 Connected to Cognigy AI");
+});
+
+client.on("disconnected", () => {
+    console.log("Disconnected from Cognigy AI");
+    updateConnectionStatus(false);
+    addToMessageFlow("🔴 Disconnected from Cognigy AI");
 });
 
 // Connect to Cognigy
