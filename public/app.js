@@ -56,7 +56,7 @@ function clearLogs() {
 
 // Handle incoming messages
 client.on("output", (output) => {
-    displayMessage(output.text, 'bot');
+    displayMessage(output, 'bot');
     logMessageFlow('Response', output);
     if (output.data) {
         console.log("Data:", output.data);
@@ -102,18 +102,86 @@ async function initializeConnection() {
 }
 
 // Display message in the chat
-function displayMessage(text, sender) {
+function displayMessage(content, sender) {
     const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-    messageDiv.innerHTML = text;
-    
-    // Remove typing indicator if it exists
-    const typingDiv = document.getElementById('typing-indicator');
-    if (typingDiv) {
-        typingDiv.remove();
+    messageDiv.classList.add('message', `${sender}-message`);
+
+    if (typeof content === 'object' && content.data && content.data._cognigy?._default?._adaptiveCard) {
+        // Handle Adaptive Card
+        const adaptiveCard = content.data._cognigy._default._adaptiveCard.adaptiveCard;
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('adaptive-card');
+
+        // Add title/description
+        const titleBlock = adaptiveCard.body.find(item => item.type === 'TextBlock');
+        if (titleBlock) {
+            const title = document.createElement('div');
+            title.classList.add('card-title');
+            title.textContent = titleBlock.text;
+            cardDiv.appendChild(title);
+        }
+
+        // Add form inputs
+        const form = document.createElement('form');
+        form.classList.add('card-form');
+        
+        adaptiveCard.body.forEach(item => {
+            if (item.type.startsWith('Input.')) {
+                const inputGroup = document.createElement('div');
+                inputGroup.classList.add('input-group');
+
+                const input = document.createElement('input');
+                input.type = item.style === 'Tel' ? 'tel' : 
+                            item.style === 'Email' ? 'email' : 'text';
+                input.id = item.id;
+                input.placeholder = item.placeholder;
+                input.required = item.isRequired || false;
+                input.pattern = item.regex?.replace(/\\\\/, '\\');
+                
+                const error = document.createElement('div');
+                error.classList.add('error-message');
+                error.textContent = item.errorMessage;
+                error.style.display = 'none';
+
+                input.addEventListener('input', () => {
+                    const isValid = input.checkValidity();
+                    error.style.display = isValid ? 'none' : 'block';
+                });
+
+                inputGroup.appendChild(input);
+                inputGroup.appendChild(error);
+                form.appendChild(inputGroup);
+            }
+        });
+
+        // Add submit button
+        const submitAction = adaptiveCard.actions.find(action => action.type === 'Action.Submit');
+        if (submitAction) {
+            const button = document.createElement('button');
+            button.type = 'submit';
+            button.classList.add('card-submit');
+            button.textContent = submitAction.title;
+            
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+                client.sendMessage('', { 
+                    action: submitAction.data.action,
+                    ...data
+                });
+                messageDiv.classList.add('submitted');
+            });
+
+            form.appendChild(button);
+        }
+
+        cardDiv.appendChild(form);
+        messageDiv.appendChild(cardDiv);
+    } else {
+        messageDiv.textContent = content.text || content;
     }
-    
+
     messagesContainer.appendChild(messageDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }

@@ -7,6 +7,8 @@
     --cognigy-chat-bot-text: #1A1A1A;
     --cognigy-chat-user-text: #FFFFFF;
     --cognigy-chat-timestamp: #666666;
+    --cognigy-chat-error: #D32F2F;
+    --cognigy-chat-primary-dark: #0052CC;
 }
 
 * {
@@ -259,6 +261,94 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Adaptive Card Styles */
+.adaptive-card {
+    background: var(--cognigy-chat-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 400px;
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cognigy-chat-text);
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    line-height: 1.4;
+}
+
+.card-form {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.input-group input {
+    padding: 10px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--cognigy-chat-primary);
+    outline: none;
+}
+
+.input-group input:invalid {
+    border-color: var(--cognigy-chat-error, #D32F2F);
+}
+
+.error-message {
+    font-size: 0.8rem;
+    color: var(--cognigy-chat-error, #D32F2F);
+    margin-top: 4px;
+}
+
+.card-submit {
+    background-color: var(--cognigy-chat-primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    align-self: flex-end;
+    margin-top: 8px;
+}
+
+.card-submit:hover {
+    transform: translateY(-1px);
+    background-color: var(--cognigy-chat-primary-dark, #0052CC);
+}
+
+.card-submit:active {
+    transform: translateY(0);
+}
+
+/* Submitted card state */
+.submitted .card-form {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.submitted .card-submit {
+    background-color: var(--cognigy-chat-accent);
 }
 
 /* Responsive Design */
