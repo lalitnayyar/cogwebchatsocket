@@ -1,15 +1,12 @@
 :root {
-    /* Cognigy Theme Colors */
     --cognigy-chat-primary: #0F6FFF;
     --cognigy-chat-secondary: #F4F4F4;
     --cognigy-chat-accent: #00C853;
-    --cognigy-chat-error: #D32F2F;
     --cognigy-chat-background: #FFFFFF;
-    --cognigy-chat-bot-message: #F4F7F9;
-    --cognigy-chat-user-message: #0F6FFF;
-    --cognigy-chat-bot-text: #000000;
+    --cognigy-chat-text: #1A1A1A;
+    --cognigy-chat-bot-text: #1A1A1A;
     --cognigy-chat-user-text: #FFFFFF;
-    --cognigy-chat-timestamp: #8A8A8A;
+    --cognigy-chat-timestamp: #666666;
 }
 
 * {
@@ -20,43 +17,32 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, var(--cognigy-chat-background) 0%, var(--cognigy-chat-secondary) 100%);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--cognigy-chat-bot-text);
-}
-
-.app-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, var(--cognigy-chat-background) 0%, var(--cognigy-chat-secondary) 100%);
-}
-
-.chat-container {
-    flex: 1;
-    max-width: 800px;
-    height: 100%;
-    margin: 0;
     background-color: var(--cognigy-chat-background);
-    border-radius: 20px;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    color: var(--cognigy-chat-text);
+}
+
+/* App Container */
+.app-container {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--cognigy-chat-background) 0%, var(--cognigy-chat-secondary) 100%);
+}
+
+/* Left Sidebar - Chat */
+.left-sidebar {
+    flex: 1;
+    min-width: 400px;
+    max-width: 800px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    position: relative;
+    background-color: var(--cognigy-chat-background);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .chat-header {
     background-color: var(--cognigy-chat-primary);
     padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     color: white;
 }
 
@@ -68,20 +54,19 @@ body {
 
 .header-content i {
     font-size: 24px;
-    color: white;
 }
 
 .header-content h1 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
 }
 
 .connection-status {
+    margin-top: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
-    color: white;
+    font-size: 0.9rem;
 }
 
 .status-dot {
@@ -89,86 +74,21 @@ body {
     height: 8px;
     border-radius: 50%;
     background-color: var(--cognigy-chat-accent);
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 0.7;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
 }
 
 .chat-messages {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background-color: var(--cognigy-chat-background);
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.message {
-    max-width: 80%;
-    padding: 12px 16px;
-    border-radius: 12px;
-    position: relative;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    transition: all 0.3s ease;
-}
-
-.message::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    width: 12px;
-    height: 12px;
-}
-
-.user-message {
-    background-color: var(--cognigy-chat-user-message);
-    color: var(--cognigy-chat-user-text);
-    margin-left: auto;
-    border-bottom-right-radius: 4px;
-}
-
-.user-message::after {
-    right: -6px;
-    background: radial-gradient(circle at top left, transparent 60%, var(--cognigy-chat-user-message) 0);
-}
-
-.bot-message {
-    background-color: var(--cognigy-chat-bot-message);
-    color: var(--cognigy-chat-bot-text);
-    margin-right: auto;
-    border-bottom-left-radius: 4px;
-}
-
-.bot-message::after {
-    left: -6px;
-    background: radial-gradient(circle at top right, transparent 60%, var(--cognigy-chat-bot-message) 0);
-}
-
-#typing-indicator {
-    background-color: var(--cognigy-chat-bot-message);
-    color: var(--cognigy-chat-timestamp);
-    font-style: italic;
-}
-
 .chat-input {
     padding: 20px;
     background-color: var(--cognigy-chat-background);
-    border-top: 1px solid var(--cognigy-chat-secondary);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .input-wrapper {
@@ -176,126 +96,46 @@ body {
     align-items: center;
     gap: 12px;
     background-color: var(--cognigy-chat-secondary);
-    padding: 12px 16px;
-    border-radius: 24px;
-    transition: all 0.3s ease;
-}
-
-.input-wrapper:focus-within {
-    box-shadow: 0 0 0 2px var(--cognigy-chat-primary);
+    padding: 12px;
+    border-radius: 12px;
 }
 
 .input-wrapper i {
-    color: var(--cognigy-chat-timestamp);
-    font-size: 1.2rem;
+    color: var(--cognigy-chat-primary);
+    font-size: 20px;
 }
 
-input {
+.input-wrapper input {
     flex: 1;
     border: none;
     background: none;
-    padding: 8px 0;
-    font-size: 0.95rem;
-    color: var(--cognigy-chat-bot-text);
-    font-family: 'Poppins', sans-serif;
-}
-
-input:focus {
     outline: none;
+    font-size: 1rem;
+    font-family: inherit;
 }
 
-button {
-    background: none;
+.input-wrapper button {
+    background-color: var(--cognigy-chat-primary);
+    color: white;
     border: none;
-    color: var(--cognigy-chat-primary);
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-button:hover {
-    background-color: var(--cognigy-chat-primary);
-    color: white;
-    transform: scale(1.1);
-}
-
-/* Timestamp styling */
-.message-timestamp {
-    font-size: 0.75rem;
-    color: var(--cognigy-chat-timestamp);
-    margin-top: 4px;
-}
-
-/* Quick Reply Buttons */
-.quick-replies {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.quick-reply-button {
-    background-color: var(--cognigy-chat-secondary);
-    border: 1px solid var(--cognigy-chat-primary);
-    color: var(--cognigy-chat-primary);
     padding: 8px 16px;
-    border-radius: 16px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.2s;
 }
 
-.quick-reply-button:hover {
-    background-color: var(--cognigy-chat-primary);
-    color: white;
+.input-wrapper button:hover {
+    transform: scale(1.05);
 }
 
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-    width: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--cognigy-chat-secondary);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--cognigy-chat-primary);
-}
-
-/* Message Animations */
-@keyframes messageIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.message {
-    animation: messageIn 0.3s ease-out forwards;
-}
-
-/* Sidebar Styles */
-.sidebar {
-    width: 400px;
+/* Right Sidebar - Message Flow */
+.right-sidebar {
+    width: 500px;
+    height: 100vh;
     background-color: var(--cognigy-chat-background);
-    border-radius: 20px;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-header {
@@ -320,15 +160,17 @@ button:hover {
     color: white;
     padding: 8px 12px;
     border-radius: 8px;
+    border: none;
+    cursor: pointer;
     font-size: 0.9rem;
     display: flex;
     align-items: center;
     gap: 6px;
+    transition: background-color 0.2s;
 }
 
 .clear-logs-btn:hover {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: none;
 }
 
 .message-flow {
@@ -386,19 +228,58 @@ button:hover {
     color: var(--cognigy-chat-accent);
 }
 
+/* Message Styles */
+.message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    animation: messageIn 0.3s ease-out forwards;
+}
+
+.user-message {
+    background-color: var(--cognigy-chat-primary);
+    color: var(--cognigy-chat-user-text);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.bot-message {
+    background-color: var(--cognigy-chat-secondary);
+    color: var(--cognigy-chat-bot-text);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+@keyframes messageIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .app-container {
         flex-direction: column;
     }
     
-    .sidebar {
+    .left-sidebar,
+    .right-sidebar {
         width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
+        max-width: 100%;
+        height: 50vh;
     }
     
-    .chat-container {
-        margin: 0 auto;
+    .left-sidebar {
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .right-sidebar {
+        border-left: none;
     }
 }
