@@ -106,80 +106,152 @@ function displayMessage(content, sender) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', `${sender}-message`);
 
-    if (typeof content === 'object' && content.data && content.data._cognigy?._default?._adaptiveCard) {
-        // Handle Adaptive Card
-        const adaptiveCard = content.data._cognigy._default._adaptiveCard.adaptiveCard;
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('adaptive-card');
-
-        // Add title/description
-        const titleBlock = adaptiveCard.body.find(item => item.type === 'TextBlock');
-        if (titleBlock) {
-            const title = document.createElement('div');
-            title.classList.add('card-title');
-            title.textContent = titleBlock.text;
-            cardDiv.appendChild(title);
-        }
-
-        // Add form inputs
-        const form = document.createElement('form');
-        form.classList.add('card-form');
+    if (typeof content === 'object' && content.data) {
+        const cognigyData = content.data._cognigy?._default;
         
-        adaptiveCard.body.forEach(item => {
-            if (item.type.startsWith('Input.')) {
-                const inputGroup = document.createElement('div');
-                inputGroup.classList.add('input-group');
+        if (cognigyData?._buttons) {
+            // Handle buttons
+            const buttonData = cognigyData._buttons;
+            const textDiv = document.createElement('div');
+            textDiv.classList.add('message-text');
+            textDiv.textContent = buttonData.text;
+            messageDiv.appendChild(textDiv);
 
-                const input = document.createElement('input');
-                input.type = item.style === 'Tel' ? 'tel' : 
-                            item.style === 'Email' ? 'email' : 'text';
-                input.id = item.id;
-                input.placeholder = item.placeholder;
-                input.required = item.isRequired || false;
-                input.pattern = item.regex?.replace(/\\\\/, '\\');
-                
-                const error = document.createElement('div');
-                error.classList.add('error-message');
-                error.textContent = item.errorMessage;
-                error.style.display = 'none';
-
-                input.addEventListener('input', () => {
-                    const isValid = input.checkValidity();
-                    error.style.display = isValid ? 'none' : 'block';
-                });
-
-                inputGroup.appendChild(input);
-                inputGroup.appendChild(error);
-                form.appendChild(inputGroup);
-            }
-        });
-
-        // Add submit button
-        const submitAction = adaptiveCard.actions.find(action => action.type === 'Action.Submit');
-        if (submitAction) {
-            const button = document.createElement('button');
-            button.type = 'submit';
-            button.classList.add('card-submit');
-            button.textContent = submitAction.title;
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.classList.add('button-container');
             
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData);
-                client.sendMessage('', { 
-                    action: submitAction.data.action,
-                    ...data
-                });
-                messageDiv.classList.add('submitted');
+            buttonData.buttons.forEach(button => {
+                const buttonElement = document.createElement('button');
+                buttonElement.classList.add('cognigy-button');
+                buttonElement.textContent = button.title;
+                buttonElement.onclick = () => {
+                    client.sendMessage(button.payload);
+                    // Disable all buttons after selection
+                    buttonsDiv.querySelectorAll('button').forEach(btn => {
+                        btn.disabled = true;
+                        btn.classList.add('disabled');
+                    });
+                };
+                buttonsDiv.appendChild(buttonElement);
+            });
+            
+            messageDiv.appendChild(buttonsDiv);
+        } else if (cognigyData?._quickReplies) {
+            // Handle quick replies
+            const quickReplies = cognigyData._quickReplies;
+            const textDiv = document.createElement('div');
+            textDiv.classList.add('message-text');
+            textDiv.textContent = quickReplies.text;
+            messageDiv.appendChild(textDiv);
+
+            const repliesDiv = document.createElement('div');
+            repliesDiv.classList.add('quick-replies-container');
+            
+            quickReplies.quickReplies.forEach(reply => {
+                const replyButton = document.createElement('button');
+                replyButton.classList.add('quick-reply');
+                
+                if (reply.imageUrl) {
+                    const img = document.createElement('img');
+                    img.src = reply.imageUrl;
+                    img.alt = reply.imageAltText || reply.title;
+                    img.classList.add('quick-reply-image');
+                    replyButton.appendChild(img);
+                }
+                
+                const span = document.createElement('span');
+                span.textContent = reply.title;
+                replyButton.appendChild(span);
+                
+                replyButton.onclick = () => {
+                    client.sendMessage(reply.payload);
+                    // Remove quick replies after selection
+                    repliesDiv.remove();
+                };
+                
+                repliesDiv.appendChild(replyButton);
+            });
+            
+            messageDiv.appendChild(repliesDiv);
+        } else if (cognigyData?._adaptiveCard) {
+            // Handle Adaptive Card
+            const adaptiveCard = cognigyData._adaptiveCard.adaptiveCard;
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('adaptive-card');
+
+            // Add title/description
+            const titleBlock = adaptiveCard.body.find(item => item.type === 'TextBlock');
+            if (titleBlock) {
+                const title = document.createElement('div');
+                title.classList.add('card-title');
+                title.textContent = titleBlock.text;
+                cardDiv.appendChild(title);
+            }
+
+            // Add form inputs
+            const form = document.createElement('form');
+            form.classList.add('card-form');
+            
+            adaptiveCard.body.forEach(item => {
+                if (item.type.startsWith('Input.')) {
+                    const inputGroup = document.createElement('div');
+                    inputGroup.classList.add('input-group');
+
+                    const input = document.createElement('input');
+                    input.type = item.style === 'Tel' ? 'tel' : 
+                                item.style === 'Email' ? 'email' : 'text';
+                    input.id = item.id;
+                    input.placeholder = item.placeholder;
+                    input.required = item.isRequired || false;
+                    input.pattern = item.regex?.replace(/\\\\/, '\\');
+                    
+                    const error = document.createElement('div');
+                    error.classList.add('error-message');
+                    error.textContent = item.errorMessage;
+                    error.style.display = 'none';
+
+                    input.addEventListener('input', () => {
+                        const isValid = input.checkValidity();
+                        error.style.display = isValid ? 'none' : 'block';
+                    });
+
+                    inputGroup.appendChild(input);
+                    inputGroup.appendChild(error);
+                    form.appendChild(inputGroup);
+                }
             });
 
-            form.appendChild(button);
-        }
+            // Add submit button
+            const submitAction = adaptiveCard.actions.find(action => action.type === 'Action.Submit');
+            if (submitAction) {
+                const button = document.createElement('button');
+                button.type = 'submit';
+                button.classList.add('card-submit');
+                button.textContent = submitAction.title;
+                
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData);
+                    client.sendMessage('', { 
+                        action: submitAction.data.action,
+                        ...data
+                    });
+                    messageDiv.classList.add('submitted');
+                });
 
-        cardDiv.appendChild(form);
-        messageDiv.appendChild(cardDiv);
+                form.appendChild(button);
+            }
+
+            cardDiv.appendChild(form);
+            messageDiv.appendChild(cardDiv);
+        } else {
+            // Handle regular text message
+            messageDiv.textContent = content.text || content;
+        }
     } else {
-        messageDiv.textContent = content.text || content;
+        // Handle string messages
+        messageDiv.textContent = content;
     }
 
     messagesContainer.appendChild(messageDiv);

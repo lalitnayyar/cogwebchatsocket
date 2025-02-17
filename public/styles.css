@@ -9,6 +9,12 @@
     --cognigy-chat-timestamp: #666666;
     --cognigy-chat-error: #D32F2F;
     --cognigy-chat-primary-dark: #0052CC;
+    --cognigy-button-background: #FFFFFF;
+    --cognigy-button-text: #0F6FFF;
+    --cognigy-button-hover: #F5F8FF;
+    --cognigy-quick-reply-background: #F0F0F0;
+    --cognigy-quick-reply-text: #1A1A1A;
+    --cognigy-quick-reply-hover: #E0E0E0;
 }
 
 * {
@@ -232,35 +238,102 @@ body {
 
 /* Message Styles */
 .message {
-    max-width: 80%;
-    padding: 12px 16px;
-    border-radius: 12px;
+    max-width: 85%;
+    margin-bottom: 16px;
     animation: messageIn 0.3s ease-out forwards;
 }
 
-.user-message {
-    background-color: var(--cognigy-chat-primary);
-    color: var(--cognigy-chat-user-text);
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
+.message-text {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 8px;
 }
 
-.bot-message {
+.bot-message .message-text {
     background-color: var(--cognigy-chat-secondary);
     color: var(--cognigy-chat-bot-text);
-    align-self: flex-start;
     border-bottom-left-radius: 4px;
 }
 
-@keyframes messageIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.user-message .message-text {
+    background-color: var(--cognigy-chat-primary);
+    color: var(--cognigy-chat-user-text);
+    border-bottom-right-radius: 4px;
+}
+
+/* Button Styles */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 0 8px;
+}
+
+.cognigy-button {
+    background-color: var(--cognigy-button-background);
+    color: var(--cognigy-button-text);
+    border: 1px solid var(--cognigy-chat-primary);
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cognigy-button:hover:not(.disabled) {
+    background-color: var(--cognigy-button-hover);
+    transform: translateY(-1px);
+}
+
+.cognigy-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    border-color: var(--cognigy-chat-secondary);
+    color: var(--cognigy-chat-timestamp);
+}
+
+/* Quick Reply Styles */
+.quick-replies-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 0 8px;
+}
+
+.quick-reply {
+    background-color: var(--cognigy-quick-reply-background);
+    color: var(--cognigy-quick-reply-text);
+    border: none;
+    border-radius: 16px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quick-reply:hover {
+    background-color: var(--cognigy-quick-reply-hover);
+    transform: translateY(-1px);
+}
+
+.quick-reply-image {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 /* Adaptive Card Styles */
@@ -371,5 +444,17 @@ body {
     
     .right-sidebar {
         border-left: none;
+    }
+}
+
+/* Message Animation */
+@keyframes messageIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
