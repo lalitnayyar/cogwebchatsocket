@@ -15,6 +15,7 @@ const messagesContainer = document.getElementById('messages');
 const messageInput = document.getElementById('messageInput');
 const statusDot = document.querySelector('.status-dot');
 const statusText = document.querySelector('.status-text');
+const messageFlow = document.getElementById('messageFlow');
 
 // Update connection status
 function updateConnectionStatus(isConnected) {
@@ -27,9 +28,36 @@ function updateConnectionStatus(isConnected) {
     }
 }
 
+// Log message flow
+function logMessageFlow(direction, data) {
+    const entry = document.createElement('div');
+    entry.classList.add('flow-entry', direction.toLowerCase());
+    
+    const timestamp = new Date().toLocaleTimeString();
+    const icon = direction === 'Request' ? 'fa-arrow-up' : 'fa-arrow-down';
+    
+    entry.innerHTML = `
+        <div class="timestamp">${timestamp}</div>
+        <div class="direction">
+            <i class="fas ${icon}"></i>
+            ${direction}
+        </div>
+        <pre>${JSON.stringify(data, null, 2)}</pre>
+    `;
+    
+    messageFlow.appendChild(entry);
+    messageFlow.scrollTop = messageFlow.scrollHeight;
+}
+
+// Clear message flow logs
+function clearLogs() {
+    messageFlow.innerHTML = '';
+}
+
 // Handle incoming messages
 client.on("output", (output) => {
     displayMessage(output.text, 'bot');
+    logMessageFlow('Response', output);
     if (output.data) {
         console.log("Data:", output.data);
     }
@@ -95,6 +123,7 @@ function sendMessage() {
     const message = messageInput.value.trim();
     if (message) {
         displayMessage(message, 'user');
+        logMessageFlow('Request', { text: message });
         client.sendMessage(message);
         messageInput.value = '';
     }

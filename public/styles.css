@@ -28,10 +28,20 @@ body {
     color: var(--cognigy-chat-bot-text);
 }
 
-.chat-container {
+.app-container {
     width: 100%;
+    height: 100vh;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--cognigy-chat-background) 0%, var(--cognigy-chat-secondary) 100%);
+}
+
+.chat-container {
+    flex: 1;
     max-width: 800px;
-    height: 90vh;
+    height: 100%;
+    margin: 0;
     background-color: var(--cognigy-chat-background);
     border-radius: 20px;
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
@@ -275,4 +285,120 @@ button:hover {
 
 .message {
     animation: messageIn 0.3s ease-out forwards;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 400px;
+    background-color: var(--cognigy-chat-background);
+    border-radius: 20px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    background-color: var(--cognigy-chat-primary);
+    padding: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clear-logs-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.clear-logs-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: none;
+}
+
+.message-flow {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.flow-entry {
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: 'Monaco', 'Consolas', monospace;
+    animation: messageIn 0.3s ease-out forwards;
+}
+
+.flow-entry pre {
+    margin: 8px 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.flow-entry .timestamp {
+    font-size: 0.8rem;
+    color: var(--cognigy-chat-timestamp);
+    margin-bottom: 4px;
+}
+
+.flow-entry .direction {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.request {
+    background-color: rgba(15, 111, 255, 0.1);
+    border-left: 3px solid var(--cognigy-chat-primary);
+}
+
+.request .direction {
+    color: var(--cognigy-chat-primary);
+}
+
+.response {
+    background-color: rgba(0, 200, 83, 0.1);
+    border-left: 3px solid var(--cognigy-chat-accent);
+}
+
+.response .direction {
+    color: var(--cognigy-chat-accent);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .app-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .chat-container {
+        margin: 0 auto;
+    }
 }
