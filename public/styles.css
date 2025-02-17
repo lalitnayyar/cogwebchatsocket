@@ -662,18 +662,26 @@ h1, h2 {
 }
 
 .input-wrapper button {
-    background-color: var(--cognigy-chat-primary);
-    color: var(--cognigy-chat-background);
+    background-color: transparent;
+    color: #000000;
     border: none;
     padding: 8px 16px;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .input-wrapper button:hover {
-    background-color: var(--cognigy-chat-primary-dark);
+    background-color: rgba(0, 0, 0, 0.05);
     transform: translateY(-1px);
+}
+
+.input-wrapper button i {
+    font-size: 18px;
+    color: #000000;
 }
 
 .input-wrapper i {
